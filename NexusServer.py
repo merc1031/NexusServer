@@ -3,7 +3,7 @@ import os
 import errno
 
 from gevent import monkey; monkey.patch_all()
-from bottle import route, run, post, request
+from bottle import route, run, post, request, get
 
 
 @post('/file')
@@ -30,6 +30,11 @@ def postOptions():
         gHandler.handleOptions(data)
 
         return { "success" : True, "data" : { }, "code" : -1 }
+
+@get('/opt')
+def getOptions():
+    global gHandler
+    return gHandler.getOptions()
 
 class Handler(object):
     def __init__(self):
@@ -66,6 +71,9 @@ class Handler(object):
             arrayDir[0] = arrayDir[0] + '\\' if arrayDir[0][1] == ':' else arrayDir[0]
         destPath = os.path.join(*arrayDir)
         return destPath
+
+    def getOptions(self):
+        return self.routes
 
 gHandler = None
 
