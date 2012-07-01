@@ -1,7 +1,7 @@
 import shutil
 import os
 import errno
-
+import json
 from gevent import monkey; monkey.patch_all()
 from bottle import route, run, post, request, get
 
@@ -49,6 +49,8 @@ class Handler(object):
 
     def handleOptions(self, options):
         self.routes = Handler.convertFromJS(options)
+        with open(os.path.join('config', 'config.ini'), 'w+') as f:
+            f.write(json.dumps(self.routes))
 
     def handleData(self, downloadItem):
         import re
@@ -73,6 +75,7 @@ class Handler(object):
         return destPath
 
     def getOptions(self):
+        print self.routes
         return self.routes
 
 gHandler = None
