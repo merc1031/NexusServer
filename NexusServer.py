@@ -37,8 +37,9 @@ def getOptions():
     return gHandler.getOptions()
 
 class Handler(object):
-    def __init__(self):
-        self.routes = {}
+    def __init__(self,*args,**kwargs):
+        config = kwargs.get('config', os.path.join('config', 'config.ini'))
+        self.getRoutesFromConfig(config) 
 
     @staticmethod
     def convertFromJS(options):
@@ -46,6 +47,13 @@ class Handler(object):
             value['enabled'] = True if value['enabled'] == 'on' else False
 
         return options 
+
+    def getRoutesFromConfig(self, config):
+        if os.path.exists(config):
+            with open(config, 'r') as f:
+                self.routes = json.loads(f.read())
+        else:
+            self.routes = {}
 
     def handleOptions(self, options):
         self.routes = Handler.convertFromJS(options)
