@@ -66,13 +66,14 @@ class Handler(object):
         dest = downloadItem['filename']
         destPath = Handler.fixPath(dest)
         (head, tail) = os.path.split(destPath)
-        for k,v in self.routes.iteritems(): 
-            o = re.search(k, source)
-            if o is not None:
-                tarDir = Handler.fixPath(v['route']) 
-                mkdir_p(tarDir)
-                shutil.move(destPath, os.path.join(tarDir, tail) )
-                break
+        for k,v in self.routes.iteritems():
+            if v['enabled']:
+                o = re.search(k, source)
+                if o is not None:
+                    tarDir = Handler.fixPath(v['route']) 
+                    mkdir_p(tarDir)
+                    shutil.move(destPath, os.path.join(tarDir, tail) )
+                    break
 
     @staticmethod
     def fixPath(path):
